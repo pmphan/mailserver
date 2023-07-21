@@ -1,0 +1,48 @@
+########################
+# /etc/postfix/main.cf #
+########################
+
+# Default is 0. Current version is 3.8.
+compatibility_level = 3.8
+
+# Prevent biff service from notifying new mails.
+biff = no
+
+# Only clients in same subnet are allowed to relay emails.
+mynetworks_style = subnet
+
+# Prevent SMTP's greeting banner showing mailler as Postfix.
+smtpd_banner = $myhostname ESMTP
+
+# Sending email with TLS when possible
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+smtp_tls_CApath =
+
+# Receiving secure email when possible
+smtpd_tls_security_level = may
+smtpd_tls_loglevel = 1
+smtpd_tls_CApath =
+
+# Reduce CPU overhead
+tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
+
+# Alias database for system users
+alias_maps = lmdb:/etc/postfix/aliases
+alias_database = lmdb:/etc/postfix/aliases
+
+# For virtual users
+virtual_alias_maps = lmdb:/etc/postfix/virtual
+
+# Postfix email extensions.
+recipient_delimiter = +
+
+# No limit on user mailbox.
+mailbox_size_limit = 0
+
+# Early prevent of spam.
+smtpd_helo_required = yes
+smtpd_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, permit 
+
+# Output logs to stdout
+maillog_file = /dev/stdout
