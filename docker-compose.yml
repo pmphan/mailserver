@@ -22,6 +22,6 @@ services:
 
 secrets:
   cert_file:
-    file: /etc/ssl/phuongmphan.com.crt
+    file: /etc/ssl/fullchain.crt
   key_file:
     file: /etc/ssl/private/phuongmphan.com.key

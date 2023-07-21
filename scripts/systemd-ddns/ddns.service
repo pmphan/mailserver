@@ -1,0 +1,12 @@
+[Unit]
+Description=Dynamic DNS update service for Google Domains.
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/ddns.conf
+ExecStart=/usr/bin/curl https://domains.google.com/nic/update? -s -X POST -u ${USERNAME}:${PASSWORD} -d hostname=${HOSTNAME} -d offline=${OFFLINE:-no}
+
+[Install]
+WantedBy=multi-user.target
