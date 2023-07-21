@@ -2,14 +2,17 @@
 
 ## Descriptions
 
-This folder contains systemd service for auto updating Dynamic DNS for Google Domains and auto creation/renewal of certificates via Google DNS API.
+This folder contains:
+
+* Scripts for generating self-signed certificates.
+* Systemd services for auto updating Dynamic DNS for Google Domains and auto creation/renewal of certificates via Google DNS API.
 
 ## Installation
 
 Copy all `service` and `timer` files to `/usr/lib/systemd/system/`.
 
 ```bash
-sudo cp */*.service */*.timer /usr/bin/systemd/system/
+sudo cp systemd-*/*.service systemd-*/*.timer /usr/bin/systemd/system/
 ```
 
 Create a file at `/etc/ddns.conf` with variables for `ddns` service.

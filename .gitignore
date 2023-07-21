@@ -2,7 +2,7 @@
 .env
 
 # ACME.sh and its created folder
-systemd-scripts/acme.d
+scripts/acme.d
 
 # Certificates
 *.crt
