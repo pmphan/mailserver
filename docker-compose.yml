@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  postfix:
+    build:
+      context: postfix
+    image: postfix:0.1.0
+    healthcheck:
+      test: ["CMD", "/usr/sbin/postfix", "status"]
+    container_name: postfix
+    hostname: ${HOSTNAME:-mail.phuongmphan.com}
+    ports:
+      - 587:587
+    secrets:
+      - cert_file
+      - key_file
+    environment:
+      MASTER_USER: ${MASTER_USER:-contact}
+      MASTER_PASS: ${MASTER_PASS}
+      VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
+    restart: unless-stopped
+
+secrets:
+  cert_file:
+    file: /etc/ssl/phuongmphan.com.crt
+  key_file:
+    file: /etc/ssl/private/phuongmphan.com.key
