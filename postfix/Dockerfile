@@ -4,10 +4,10 @@ WORKDIR /opt
 
 RUN apk add --no-cache bash postfix
 
-COPY main.cf /etc/postfix/main.cf
+COPY config/*.cf /etc/postfix/
 
 COPY . .
 
-EXPOSE 25
+EXPOSE 587
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

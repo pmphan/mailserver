@@ -38,7 +38,6 @@ decode:		root
   # Route root email to the master user account.
   echo "root: ${MASTER_USER}" >> /etc/postfix/aliases
   echo "${default_aliases}" >> /etc/postfix/aliases
-
   postalias /etc/postfix/aliases
 }
 
@@ -66,5 +65,5 @@ function __add_system_user() {
 
   adduser ${1} --disabled-password --gecos ${3}
   _log "info" "Added user '${1}' as master user."
-  _log "debug" echo ${1}:${2} | chpasswd
+  echo ${1}:${2} | chpasswd
 }

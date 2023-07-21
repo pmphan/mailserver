@@ -8,7 +8,7 @@ services:
     healthcheck:
       test: ["CMD", "/usr/sbin/postfix", "status"]
     container_name: postfix
-    hostname: ${HOSTNAME:-phuongmphan.com}
+    hostname: ${HOSTNAME:-mail.phuongmphan.com}
     ports:
       - 587:587
     secrets:
@@ -17,4 +17,11 @@ services:
     environment:
       MASTER_USER: ${MASTER_USER:-contact}
       MASTER_PASS: ${MASTER_PASS}
+      VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
     restart: unless-stopped
+
+secrets:
+  cert_file:
+    file: /etc/ssl/phuongmphan.com.crt
+  key_file:
+    file: /etc/ssl/private/phuongmphan.com.key
