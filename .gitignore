@@ -1,6 +1,9 @@
 # ENV
 .env
 
+# ACME.sh and its created folder
+systemd-scripts/acme.d
+
 # Certificates
 *.crt
 *.key

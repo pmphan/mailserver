@@ -1,0 +1,13 @@
+[Unit]
+Description=Renew certificates via ACME client.
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/acme.conf
+ExecStart=/usr/bin/bash ${RENEW_SCRIPT_PATH}
+SuccessExitStatus=0 2
+
+[Install]
+WantedBy=multi-user.target
