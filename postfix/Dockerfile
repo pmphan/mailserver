@@ -10,6 +10,6 @@ COPY docker-entrypoint.sh .
 
 COPY scripts ./scripts
 
-EXPOSE 587
+EXPOSE 24 587
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

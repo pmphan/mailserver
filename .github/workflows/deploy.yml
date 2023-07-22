@@ -3,11 +3,10 @@ name: Continuous Integration
 on:
   workflow_dispatch:
   push:
-    branches: [master]
     tags: [v*]
 
 jobs:
-  build-and-publish:
+  build-postfix:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     steps:
@@ -35,10 +34,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
-    needs: build-and-publish
+    needs: build-postfix
     if: |
       always() &&
-      (needs.build-and-publish.result == 'success' || needs.build-and-publish.result == 'skipped') 
+      (needs.build-postfix.result == 'success' || needs.build-postfix.result == 'skipped') 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
