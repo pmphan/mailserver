@@ -61,4 +61,4 @@ jobs:
           port: 22
           username: ${{ secrets.MAILSERVER_USER }}
           key: ${{ secrets.MAILSERVER_KEY }}
-          script: cd /root/mailserver/ && docker-compose up -d
+          script: cd /root/mailserver/ && docker-compose pull && docker-compose up -d && docker system prune -af
