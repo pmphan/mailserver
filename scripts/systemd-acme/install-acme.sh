@@ -17,10 +17,10 @@ install_acme() {
 
 install_cert() {
   # Init cert with Google token
-  ${HOMEDIR}/acme.sh --staging --debug --issue --dns dns_googledomains -d ${HOSTNAME} -d mail.${HOSTNAME}
+  ${HOMEDIR}/acme.sh --staging --debug --issue --dns dns_googledomains -d ${HOSTNAME} -d *.${HOSTNAME}
 
   # Install cert
-  ${HOMEDIR}/acme.sh --debug --install-cert -d ${HOSTNAME} -d mail.${HOSTNAME} \
+  ${HOMEDIR}/acme.sh --debug --install-cert -d ${HOSTNAME} -d *.${HOSTNAME} \
                      --cert-file /etc/ssl/${HOSTNAME}.crt \
                      --key-file /etc/ssl/private/${HOSTNAME}.key \
                      --ca-file /etc/ssl/ca.crt \
@@ -28,7 +28,7 @@ install_cert() {
 }
 
 renew_cert() {
-  ${HOMEDIR}/acme.sh --staging --debug --renew --force --dns dns_googledomains -d ${HOSTNAME} -d mail.${HOSTNAME}
+  ${HOMEDIR}/acme.sh --staging --debug --renew --force --dns dns_googledomains -d ${HOSTNAME} -d *.${HOSTNAME}
 }
 
 source_env() {

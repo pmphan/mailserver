@@ -9,12 +9,12 @@ compatibility_level = 3.8
 biff = no
 
 # Define my networks to let Postfix recognize Docker networks
-mynetworks = 127.0.0.0/8 172.18.0.0/16 [::1]/128 [fe80::]/64
+mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
 
 # Prevent SMTP's greeting banner showing mailler as Postfix.
 smtpd_banner = $myhostname ESMTP
 
-# Auto add missing headers.
+# Auto add missing headers (e.g. Message ID)
 always_add_missing_headers = yes
 
 # Sending email with TLS when possible
@@ -30,19 +30,27 @@ smtpd_tls_cert_file = /run/secrets/cert_file
 smtpd_tls_key_file = /run/secrets/key_file
 
 # Defined for master.cf
-mua_sender_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_authenticated_sender_login_mismatch
+mua_sender_restrictions = reject_authenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
 
-# Early prevent of spam.
+# SMTPD rules
 smtpd_helo_required = yes
-smtpd_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, permit 
-smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unknown_client
+smtpd_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, permit
+smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
+smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining
+smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
 smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated
+
+# SASL via dovecot
 smtpd_sasl_security_options = noanonymous
-#TODO: Remove once done with debugging
-debug_peer_list = 172.18.0.1
 
 # Reduce CPU overhead
 tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
+
+# Defer some email harvesting
+disable_vrfy_command = yes
+
+#TODO: Remove once done with debugging
+debug_peer_list = 172.23.0.1
 
 # Alias database for system users
 alias_maps = lmdb:/etc/postfix/aliases

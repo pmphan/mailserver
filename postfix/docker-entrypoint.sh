@@ -5,8 +5,11 @@
 # Add aliases
 . ./scripts/helper.sh
 . ./scripts/aliases.sh
+. ./scripts/network.sh
+
 _add_master_user
 _add_virtual_user
+_allow_docker
 
 # Initialize aliases database.
 newaliases
