@@ -1,12 +1,14 @@
 FROM alpine:3.18.2
 
-WORKDIR /opt
-
 RUN apk add --no-cache bash postfix
 
-COPY config/*.cf /etc/postfix/
+COPY config /etc/postfix
 
-COPY . .
+WORKDIR /opt
+
+COPY docker-entrypoint.sh .
+
+COPY scripts ./scripts
 
 EXPOSE 587
 
