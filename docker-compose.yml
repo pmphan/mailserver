@@ -2,9 +2,7 @@ version: '3'
 
 services:
   postfix:
-    image: pmphan/postfix:latest
-    healthcheck:
-      test: ["CMD", "/usr/sbin/postfix", "status"]
+    image: pmphan/mailserver-postfix:latest
     container_name: postfix
     hostname: ${HOSTNAME:-mail.phuongmphan.com}
     ports:
@@ -14,9 +12,20 @@ services:
       - key_file
     environment:
       MASTER_USER: ${MASTER_USER:-contact}
-      MASTER_PASS: ${MASTER_PASS}
+      MASTER_PASS: ${MASTER_PASS:-secrets}
       VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
     restart: unless-stopped
+
+  opendkim:
+    image: pmphan/mailserver-opendkim:latest
+    container_name: opendkim
+    secrets:
+      - key_file
+    volumes:
+      - /etc/dkim/keys:/etc/opendkim/keys
+    environment:
+      DKIM_DOMAIN: ${HOSTNAME:-mail.phuongmphan.com}
+      DKIM_SELECTOR: ${DKIM_SELECTOR:-papaya}
 
 secrets:
   cert_file:
