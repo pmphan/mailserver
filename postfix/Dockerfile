@@ -1,5 +1,7 @@
 FROM alpine:3.18.2
 
+EXPOSE 587
+
 RUN apk add --no-cache bash postfix
 
 COPY config /etc/postfix
@@ -8,8 +10,6 @@ WORKDIR /opt
 
 COPY docker-entrypoint.sh .
 
-COPY scripts ./scripts
-
-EXPOSE 587
+COPY scripts scripts
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

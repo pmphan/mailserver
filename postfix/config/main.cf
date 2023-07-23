@@ -10,6 +10,7 @@ biff = no
 
 # Define my networks to let Postfix recognize Docker networks
 mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
+virtual_mailbox_domains = $mydomain
 
 # Prevent SMTP's greeting banner showing mailler as Postfix.
 smtpd_banner = $myhostname ESMTP
@@ -40,8 +41,12 @@ smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, rej
 smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
 smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated
 
+#virtual_transport = lmtp:dovecot:24
 # SASL via dovecot
-smtpd_sasl_security_options = noanonymous
+#smtpd_sasl_type = dovecot
+# SASL auth here
+#smtpd_sasl_path = inet:dovecot:10000
+#smtpd_sasl_security_options = noanonymous
 
 # Reduce CPU overhead
 tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
@@ -49,8 +54,10 @@ tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
 # Defer some email harvesting
 disable_vrfy_command = yes
 
-#TODO: Remove once done with debugging
-debug_peer_list = 172.23.0.1
+# For use by DKIM Milter
+smtpd_milters = inet:opendkim:8891
+non_smtpd_milters = $smtpd_milters
+milter_default_action = accept
 
 # Alias database for system users
 alias_maps = lmdb:/etc/postfix/aliases

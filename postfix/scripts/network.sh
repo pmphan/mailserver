@@ -8,3 +8,9 @@ _allow_docker() {
   postconf "$(postconf mynetworks) ${docker_network}"
   _log "debug" "New $(postconf mynetworks)"
 }
+
+_add_debug_peer_list() {
+  _log "debug" "Adding ${DEBUG_PEER_LIST} into '\$debug_peer_list'."
+  postconf "$(postconf debug_peer_list) ${DEBUG_PEER_LIST}"
+  _log "debug" "New $(postconf debug_peer_list)"
+}
