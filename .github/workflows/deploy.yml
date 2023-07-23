@@ -61,7 +61,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
-    needs: build-postfix
+    needs: [build-postfix, build-opendkim]
     if: |
       always() &&
       (needs.build-postfix.result == 'success' || needs.build-postfix.result == 'skipped')  &&
