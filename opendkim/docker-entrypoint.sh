@@ -4,4 +4,4 @@
 
 /etc/opendkim/setup.sh
 
-opendkim -f
+/usr/sbin/opendkim -f -x /etc/opendkim/opendkim.conf
