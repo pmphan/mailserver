@@ -6,6 +6,7 @@ services:
     container_name: postfix
     hostname: ${HOSTNAME:-mail.phuongmphan.com}
     ports:
+      - 25:25
       - 587:587
     secrets:
       - cert_file
@@ -14,6 +15,7 @@ services:
       MASTER_USER: ${MASTER_USER:-contact}
       MASTER_PASS: ${MASTER_PASS:-secrets}
       VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
+      DEBUG_PEER_LIST: ${DEBUG_PEER_LIST:-}
     restart: unless-stopped
 
   opendkim:
@@ -22,13 +24,13 @@ services:
     secrets:
       - key_file
     volumes:
-      - /etc/dkim/keys:/etc/opendkim/keys
+      - /etc/dkim/keys:/etc/dkim/keys
     environment:
       DKIM_DOMAIN: ${HOSTNAME:-mail.phuongmphan.com}
       DKIM_SELECTOR: ${DKIM_SELECTOR:-papaya}
 
 secrets:
   cert_file:
-    file: /etc/ssl/fullchain.crt
+    file: /etc/letsencrypt/live/mail.phuongmphan.com/fullchain.pem
   key_file:
-    file: /etc/ssl/private/phuongmphan.com.key
+    file: /etc/letsencrypt/live/mail.phuongmphan.com/privkey.pem

@@ -2,9 +2,9 @@ FROM alpine:3.18.2
 
 EXPOSE 8891
 
-VOLUME /etc/opendkim/keys
+VOLUME /etc/dkim/keys
 
-RUN apk add --no-cache opendkim opendkim-utils
+RUN apk add --no-cache bash opendkim opendkim-utils
 
 COPY config /etc/opendkim
 
