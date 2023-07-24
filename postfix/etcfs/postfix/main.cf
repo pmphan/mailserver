@@ -33,6 +33,9 @@ smtpd_tls_loglevel = 1
 smtpd_tls_cert_file = /run/secrets/cert_file
 smtpd_tls_key_file = /run/secrets/key_file
 
+smtpd_sasl_path = smtpd
+smtp_sasl_auth_enable = yes
+
 # Defined for master.cf
 mua_sender_restrictions = reject_authenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
 
