@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   postfix:
@@ -21,8 +21,6 @@ services:
   opendkim:
     image: pmphan/mailserver-opendkim:latest
     container_name: opendkim
-    secrets:
-      - key_file
     volumes:
       - /etc/dkim/keys:/etc/dkim/keys
     environment:

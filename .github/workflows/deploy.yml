@@ -79,7 +79,7 @@ jobs:
           username: ${{ secrets.MAILSERVER_USER }}
           key: ${{ secrets.MAILSERVER_KEY }}
           source: docker-compose.yml
-          target: /root/mailserver/
+          target: ~/mailserver/
 
       - name: Deploy
         uses: appleboy/ssh-action@v0.1.10
@@ -88,4 +88,4 @@ jobs:
           port: 22
           username: ${{ secrets.MAILSERVER_USER }}
           key: ${{ secrets.MAILSERVER_KEY }}
-          script: cd /root/mailserver/ && docker-compose pull && docker-compose up -d && docker system prune -af
+          script: cd ~/mailserver/ && docker-compose pull && docker-compose up -d && docker system prune -af

@@ -2,6 +2,9 @@
 # /etc/postfix/main.cf #
 ########################
 
+# Disallow IPv6
+inet_protocols = ipv4
+
 # Default is 0. Current version is 3.8.
 compatibility_level = 3.8
 
