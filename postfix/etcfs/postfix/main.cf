@@ -2,6 +2,9 @@
 # /etc/postfix/main.cf #
 ########################
 
+# Disallow IPv6
+inet_protocols = ipv4
+
 # Default is 0. Current version is 3.8.
 compatibility_level = 3.8
 
@@ -29,6 +32,9 @@ smtpd_tls_security_level = may
 smtpd_tls_loglevel = 1
 smtpd_tls_cert_file = /run/secrets/cert_file
 smtpd_tls_key_file = /run/secrets/key_file
+
+smtpd_sasl_path = smtpd
+smtp_sasl_auth_enable = yes
 
 # Defined for master.cf
 mua_sender_restrictions = reject_authenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain

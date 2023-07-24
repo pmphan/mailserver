@@ -79,13 +79,17 @@ jobs:
           username: ${{ secrets.MAILSERVER_USER }}
           key: ${{ secrets.MAILSERVER_KEY }}
           source: docker-compose.yml
-          target: /root/mailserver/
+          target: ~/mailserver/
 
       - name: Deploy
         uses: appleboy/ssh-action@v0.1.10
+        env:
+          RELAY_HOST: ${{ vars.RELAY_HOST }}
+          RELAY_USERNAME: ${{ secrets.RELAY_USERNAME }}
+          RELAY_PASSWORD: ${{ secrets.RELAY_PASSWORD }}
         with:
           host: ${{ vars.MAILSERVER_HOST }}
           port: 22
           username: ${{ secrets.MAILSERVER_USER }}
           key: ${{ secrets.MAILSERVER_KEY }}
-          script: cd /root/mailserver/ && docker-compose pull && docker-compose up -d && docker system prune -af
+          script: cd ~/mailserver/ && docker-compose pull && docker-compose up -d && docker system prune -af

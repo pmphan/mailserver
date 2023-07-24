@@ -2,14 +2,14 @@ FROM alpine:3.18.2
 
 EXPOSE 25 587
 
-RUN apk add --no-cache bash postfix
+RUN apk add --no-cache bash postfix cyrus-sasl cyrus-sasl-crammd5 cyrus-sasl-digestmd5 cyrus-sasl-login cyrus-sasl-ntlm
 
-COPY config /etc/postfix
+ADD etcfs /etc
 
 WORKDIR /opt
 
-COPY docker-entrypoint.sh .
-
 COPY scripts scripts
+
+COPY docker-entrypoint.sh .
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
