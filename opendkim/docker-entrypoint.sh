@@ -1,7 +1,9 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # Start container
 
 /etc/opendkim/setup.sh
 
-/usr/sbin/opendkim -f -x /etc/opendkim/opendkim.conf
+chown -R  opendkim:opendkim /etc/dkim/keys
+
+/usr/bin/supervisord -c /etc/supervisor.d/supervisord.conf

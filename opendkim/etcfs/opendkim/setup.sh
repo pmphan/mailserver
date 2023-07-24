@@ -67,5 +67,5 @@ function gen_key_pair() {
   fi
 }
 
-expand_config
 gen_key_pair
+expand_config
