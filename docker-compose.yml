@@ -6,8 +6,8 @@ services:
     container_name: postfix
     hostname: ${HOSTNAME:-mail.phuongmphan.com}
     ports:
-      - 25:25
-      - 587:587
+      - "25:25"
+      - "587:587"
     secrets:
       - cert_file
       - key_file

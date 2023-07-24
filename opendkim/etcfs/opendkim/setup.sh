@@ -67,5 +67,12 @@ function gen_key_pair() {
   fi
 }
 
-expand_config
+allow_docker() {
+  local docker_network=$(echo $(ip route) | awk -F ' ' '{printf $6}')
+  _log "debug" "Adding ${docker_network} to list of TrustedHosts."
+  echo ${docker_network} >> /etc/opendkim/TrustedHosts
+}
+
 gen_key_pair
+expand_config
+allow_docker
