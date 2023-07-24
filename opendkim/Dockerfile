@@ -4,9 +4,9 @@ EXPOSE 8891
 
 VOLUME /etc/dkim/keys
 
-RUN apk add --no-cache bash opendkim opendkim-utils
+RUN apk add --no-cache bash supervisor opendkim opendkim-utils
 
-COPY config /etc/opendkim
+COPY etcfs /etc
 
 COPY docker-entrypoint.sh .
 
