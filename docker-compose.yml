@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   postfix:
-   image: pmphan/mailserver-postfix:latest
+    image: pmphan/mailserver-postfix:latest
     container_name: postfix
     hostname: ${HOSTNAME:-mail.phuongmphan.com}
     ports:
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   opendkim:
-   image: pmphan/mailserver-opendkim:latest
+    image: pmphan/mailserver-opendkim:latest
     container_name: opendkim
     volumes:
       - /etc/dkim/keys:/etc/dkim/keys
