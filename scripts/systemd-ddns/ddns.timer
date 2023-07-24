@@ -1,9 +1,0 @@
-[Unit]
-Description=Update Dynamic DNS for Google Domains on boot and every 2 hours.
-
-[Timer]
-OnStartupSec=15min
-OnUnitActiveSec=2h
-
-[Install]
-WantedBy=timers.target

@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # Substitute environment variable into DKIM config file startup.
 
@@ -57,13 +57,13 @@ function expand_config() {
 
 function gen_key_pair() {
   # Generate keys for signing if key not exist:
-  cd /etc/opendkim/keys
-  if [[ ! -f ${DKIM_SELECTOR}* ]]
+  mkdir -p /etc/dkim/keys
+  if [[ -f /etc/dkim/keys/${DKIM_SELECTOR}.private ]]
   then
-    _log "info" "No key pair of '${DKIM_SELECTOR}' selector exists. Generating..."
-    opendkim-genkey -r -s ${DKIM_SELECTOR} -d ${DKIM_DOMAIN}
+    _log "info" "Key of '${DKIM_SELECTOR}' exists. Skipping..."
   else
-    _log "info" "Key pair of '${DKIM_SELECTOR}' exists. Skipping..."
+    _log "info" "No key pair of '${DKIM_SELECTOR}' selector exists. Generating..."
+    /usr/bin/opendkim-genkey -r -D /etc/dkim/keys -s ${DKIM_SELECTOR} -d ${DKIM_DOMAIN}
   fi
 }
 

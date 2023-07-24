@@ -1,9 +1,6 @@
 # ENV
 .env
 
-# ACME.sh and its created folder
-scripts/acme.d
-
 # Certificates
 *.crt
 *.key

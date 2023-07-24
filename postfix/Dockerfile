@@ -1,6 +1,6 @@
 FROM alpine:3.18.2
 
-EXPOSE 587
+EXPOSE 25 587
 
 RUN apk add --no-cache bash postfix
 
