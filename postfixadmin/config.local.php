@@ -12,14 +12,12 @@ $CONF['database_password'] = getenv('POSTFIXADMIN_DB_PASSWORD');
 $CONF['database_name'] = getenv('POSTFIXADMIN_DB_NAME');
 
 $CONF['smtp_server'] = 'postfix';
-$CONF['admin_email'] = 'admin@' . getenv('HOSTNAME');
 $CONF['setup_password'] = getenv('POSTFIXADMIN_SETUP_PASSWORD');
+$CONF['default_aliases'] = array(
+    'postmaster' => 'postmaster@' . getenv('HOSTNAME'),
+    'abuse' => 'postmaster@' . getenv('HOSTNAME')
+);
 
-$CONF['page_size'] = '25';
-$CONF['maxquota'] = '8192';
-$CONF['used_quotas'] = 'YES';
-$CONF['quota'] = 'YES';
-$CONF['new_quota_table'] = 'YES';
 $CONF['vacation_domain'] = 'autoreply.' . getenv('HOSTNAME');
-$CONF['footer_text'] = 'Return to ' . getenv('HOSTNAME') . '.tld';
+$CONF['footer_text'] = 'Return to ' . getenv('HOSTNAME');
 $CONF['footer_link'] = 'http://' . getenv('HOSTNAME');

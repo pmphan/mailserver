@@ -1,0 +1,17 @@
+# Database driver: mysql, pgsql, sqlite
+driver = pgsql
+
+# PQconnectdb function of libpq.
+connect = "host=postgres dbname=$dbname user=$dbuser password=$dbpassword"
+
+# Default password scheme.
+default_pass_scheme = MD5-CRYPT
+
+# Retrieve the password.
+password_query = SELECT username AS user,password FROM mailbox WHERE username = '%u' AND active='1'
+
+# Retrieve the user information.
+user_query = SELECT maildir, 1000 AS uid, 492 AS gid, concat('*:bytes=', quota) AS quota_rule FROM mailbox WHERE username = '%u' AND active = '1'
+
+# Query to get a list of all usernames.
+iterate_query = SELECT username AS user FROM mailbox

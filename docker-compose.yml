@@ -12,6 +12,21 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     restart: unless-stopped
 
+  dovecot:
+    image: pmphan/mailserver-dovecot:latest
+    container_name: dovecot
+    ports:
+      - "143:143"
+      - "993:993"
+    secrets:
+      - cert_file
+      - key_file
+      - dh_file
+    environment:
+      POSTGRES_DB: ${DB_USER}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
   postfix:
     image: pmphan/mailserver-postfix:latest
     container_name: postfix
@@ -66,6 +81,8 @@ secrets:
     file: /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem
   key_file:
     file: /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
+  dh_file:
+    file: /etc/ssl/dh.pem
 
 volumes:
   postgresdata:
