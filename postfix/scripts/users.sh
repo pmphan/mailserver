@@ -2,10 +2,8 @@
 #
 # Helper functions for configuring aliases.
 
-# Set default master user to 'contact'.
-[[ -z ${MASTER_USER} ]] && export MASTER_USER=contact
-
 function _add_master_user() {
+  # Add admin email user whose root's emails will be routed to.
   local default_aliases="# System aliases
 MAILER-DAEMON:	postmaster
 postmaster:	root
@@ -25,33 +23,21 @@ decode:		root
 
 # Local and virtual users"
 
-  if [[ ${MASTER_USER} == "root" ]]
-  then
-    _log "error" "Don't use root as main email user."
-    return 1
-  fi
-
-  __add_system_user "${MASTER_USER}" "${MASTER_PASS:=$(echo $RANDOM | md5sum)}" "Master Email"
+  local master_user="admin"
+  __add_system_user ${master_user} --gecos "Master Email"
 
   : > /etc/postfix/aliases
 
   # Route root email to the master user account.
-  echo "root: ${MASTER_USER}" >> /etc/postfix/aliases
+  echo "root: ${master_user}" >> /etc/postfix/aliases
   echo "${default_aliases}" >> /etc/postfix/aliases
   postalias /etc/postfix/aliases
 }
 
-function _add_virtual_user() {
-  # By default map virtual user to root
-  if [[ -z ${VIRTUAL_USER} ]]
-  then
-    _log "debug" "Empty 'VIRTUAL_USER', no default virtual alias created."
-    return 0
-  fi
-
-  : > /etc/postfix/virtual
-  echo "${VIRTUAL_USER} ${MASTER_USER}" >> /etc/postfix/virtual
-  postmap /etc/postfix/virtual
+function _add_vmail_user() {
+  # Avoid using the name vmail as it was created in the image and I wasn't sure
+  # which application created it.
+  __add_system_user email -h /var/spool/vmail -g "Virtual Email User" -S -u 2000
 }
 
 function __add_system_user() {
@@ -63,7 +49,6 @@ function __add_system_user() {
     return 1
   fi
 
-  adduser ${1} --disabled-password --gecos ${3}
-  _log "info" "Added user '${1}' as master user."
-  echo ${1}:${2} | chpasswd
+  adduser ${1} --disabled-password ${@:2}
+  _log "info" "Added user '${1}'"
 }

@@ -13,7 +13,6 @@ biff = no
 
 # Define my networks to let Postfix recognize Docker networks
 mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
-virtual_mailbox_domains = $mydomain
 
 # Prevent SMTP's greeting banner showing mailler as Postfix.
 smtpd_banner = $myhostname ESMTP
@@ -47,6 +46,17 @@ smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, rej
 smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
 smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated
 
+# How to look up domain info
+virtual_mailbox_domains = pgsql:/etc/postfix/pgsql/virtual_mailbox_domains.cf
+# Lookup email address
+virtual_mailbox_maps = pgsql:/etc/postfix/pgsql/virtual_mailbox_maps.cf
+# Look up alias
+virtual_alias_maps = pgsql:/etc/postfix/pgsql/virtual_alias_maps.cf
+# Relay domain maps
+relay_domains = $mydestination, pgsql:/etc/postfix/pgsql/relay_domains.cf
+# Sender login info look up. Used for authen.
+smtpd_sender_login_maps = pgsql:/etc/postfix/pgsql/smtpd_sender_login_maps.cf
+
 #virtual_transport = lmtp:dovecot:24
 # SASL via dovecot
 #smtpd_sasl_type = dovecot
@@ -68,9 +78,6 @@ milter_default_action = accept
 # Alias database for system users
 alias_maps = lmdb:/etc/postfix/aliases
 alias_database = lmdb:/etc/postfix/aliases
-
-# For virtual users
-virtual_alias_maps = lmdb:/etc/postfix/virtual
 
 # Postfix email extensions.
 recipient_delimiter = +
