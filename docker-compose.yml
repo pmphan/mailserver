@@ -31,13 +31,14 @@ services:
     restart: unless-stopped
 
   postfixadmin:
-    image: postfixadmin:3.3
+    image: pmphan/mailserver-postfixadmin:latest
     container_name: postfixadmin
     ports:
       - "80:80"
-    volumes:
-      - ./postfixadmin/config.local.php:/var/www/html/config.local.php
-      - ./postfixadmin/apache2.conf:/etc/apache2/apache2.conf
+      - "443:443"
+    secrets:
+      - cert_file
+      - key_file
     environment:
       HOSTNAME: ${HOSTNAME}
       POSTFIXADMIN_DB_TYPE: pgsql
