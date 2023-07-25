@@ -17,12 +17,6 @@ $CONF['setup_password'] = getenv('POSTFIXADMIN_SETUP_PASSWORD');
 
 $CONF['page_size'] = '25';
 $CONF['maxquota'] = '8192';
-$CONF['default_aliases'] = array (
-	'abuse' => 'abuse@' . getenv('HOSTNAME'),
-	'hostmaster' => 'hostmaster@' . getenv('HOSTNAME'),
-	'postmaster' => 'postmaster@' . getenv('HOSTNAME'),
-	'webmaster' => 'webmaster@' . getenv('HOSTNAME')
-);
 $CONF['used_quotas'] = 'YES';
 $CONF['quota'] = 'YES';
 $CONF['new_quota_table'] = 'YES';

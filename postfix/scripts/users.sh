@@ -34,12 +34,6 @@ decode:		root
   postalias /etc/postfix/aliases
 }
 
-function _add_vmail_user() {
-  # Avoid using the name vmail as it was created in the image and I wasn't sure
-  # which application created it.
-  __add_system_user email -h /var/spool/vmail -g "Virtual Email User" -S -u 2000
-}
-
 function __add_system_user() {
   # Add system user: username - password - GECOS
   # Check if user already exists.
@@ -49,6 +43,5 @@ function __add_system_user() {
     return 1
   fi
 
-  adduser ${1} --disabled-password ${@:2}
-  _log "info" "Added user '${1}'"
+  adduser ${1} --disabled-password ${@:2} && _log "info" "Added user '${1}'."
 }
