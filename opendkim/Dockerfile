@@ -11,3 +11,5 @@ COPY etcfs /etc
 COPY docker-entrypoint.sh .
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor.d/supervisord.conf"]
