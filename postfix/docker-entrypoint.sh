@@ -4,12 +4,13 @@
 
 # Add aliases
 . ./scripts/helper.sh
-. ./scripts/aliases.sh
+. ./scripts/users.sh
 . ./scripts/network.sh
+. ./scripts/fillargs.sh
 
 _add_master_user
-_add_virtual_user
 _allow_docker
+_substitue_pgsql_creds
 _add_debug_peer_list
 _config_relay_host
 

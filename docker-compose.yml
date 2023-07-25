@@ -1,24 +1,54 @@
 version: '3.3'
 
 services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postfix
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
+
   postfix:
     image: pmphan/mailserver-postfix:latest
     container_name: postfix
-    hostname: ${HOSTNAME:-mail.phuongmphan.com}
+    hostname: ${HOSTNAME}
     ports:
       - "25:25"
-      - "587:587"
     secrets:
       - cert_file
       - key_file
     environment:
-      MASTER_USER: ${MASTER_USER:-contact}
-      MASTER_PASS: ${MASTER_PASS}
-      VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
-      DEBUG_PEER_LIST: ${DEBUG_PEER_LIST:-}
-      RELAY_HOST: ${RELAY_HOST:-}
-      RELAY_USERNAME: ${RELAY_USERNAME:-}
-      RELAY_PASSWORD: ${RELAY_PASSWORD:-}
+      POSTGRES_DB: postfix
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      RELAY_HOST: ${RELAY_HOST}
+      RELAY_USER: ${RELAY_USER}
+      RELAY_PASSWORD: ${RELAY_PASSWORD}
+    restart: unless-stopped
+
+  postfixadmin:
+    image: pmphan/mailserver-postfixadmin:latest
+    container_name: postfixadmin
+    ports:
+      - "80:80"
+      - "443:443"
+    secrets:
+      - cert_file
+      - key_file
+    environment:
+      HOSTNAME: ${HOSTNAME}
+      POSTFIXADMIN_DB_TYPE: pgsql
+      POSTFIXADMIN_DB_HOST: postgres
+      POSTFIXADMIN_DB_USER: ${DB_USER}
+      POSTFIXADMIN_DB_NAME: postfix
+      POSTFIXADMIN_DB_PASSWORD: ${DB_PASSWORD}
+      POSTFIXADMIN_SETUP_PASSWORD: ${POSTFIXADMIN_PASSWORD}
+      POSTFIXADMIN_SMTP_SERVER: postfix
+      POSTFIXADMIN_SMTP_PORT: 25
     restart: unless-stopped
 
   opendkim:
@@ -27,11 +57,16 @@ services:
     volumes:
       - /etc/dkim/keys:/etc/dkim/keys
     environment:
-      DKIM_DOMAIN: ${HOSTNAME:-mail.phuongmphan.com}
-      DKIM_SELECTOR: ${DKIM_SELECTOR:-papaya}
+      DKIM_DOMAIN: ${HOSTNAME}
+      DKIM_SELECTOR: ${DKIM_SELECTOR}
+    restart: unless-stopped
 
 secrets:
   cert_file:
-    file: /etc/letsencrypt/live/mail.phuongmphan.com/fullchain.pem
+    file: /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem
   key_file:
-    file: /etc/letsencrypt/live/mail.phuongmphan.com/privkey.pem
+    file: /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
+
+volumes:
+  postgresdata:
+    driver: local
