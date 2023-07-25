@@ -1,6 +1,17 @@
 version: '3.3'
 
 services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postfix}
+      POSTGRES_USER: ${DB_USER:-postfix}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-posfix}
+    restart: unless-stopped
+
   postfix:
     image: pmphan/mailserver-postfix:latest
     container_name: postfix
@@ -12,13 +23,30 @@ services:
       - cert_file
       - key_file
     environment:
-      MASTER_USER: ${MASTER_USER:-contact}
-      MASTER_PASS: ${MASTER_PASS}
-      VIRTUAL_USER: ${VIRTUAL_USER:-contact@phuongmphan.com}
       DEBUG_PEER_LIST: ${DEBUG_PEER_LIST:-}
       RELAY_HOST: ${RELAY_HOST:-}
       RELAY_USERNAME: ${RELAY_USERNAME:-}
       RELAY_PASSWORD: ${RELAY_PASSWORD:-}
+    restart: unless-stopped
+
+  postfixadmin:
+    image: postfixadmin:3.3
+    container_name: postfixadmin
+    ports:
+      - "8080:80"
+    volumes:
+      - ./postfixadmin/config.local.php:/var/www/html/config.local.php
+      - ./postfixadmin/apache2.conf:/etc/apache2/apache2.conf
+    environment:
+      HOSTNAME: ${HOSTNAME}
+      POSTFIXADMIN_DB_TYPE: pgsql
+      POSTFIXADMIN_DB_HOST: postgres
+      POSTFIXADMIN_DB_USER: ${DB_USER:-postfix}
+      POSTFIXADMIN_DB_NAME: ${DB_NAME:-postfix}
+      POSTFIXADMIN_DB_PASSWORD: ${DB_PASSWORD:-postfix}
+      POSTFIXADMIN_SETUP_PASSWORD: ${POSTFIXADMIN_PASSWORD:-postfixadmin}
+      POSTFIXADMIN_SMTP_SERVER: postfix
+      POSTFIXADMIN_SMTP_PORT: 25
     restart: unless-stopped
 
   opendkim:
@@ -29,9 +57,14 @@ services:
     environment:
       DKIM_DOMAIN: ${HOSTNAME:-mail.phuongmphan.com}
       DKIM_SELECTOR: ${DKIM_SELECTOR:-papaya}
+    restart: unless-stopped
 
 secrets:
   cert_file:
     file: /etc/letsencrypt/live/mail.phuongmphan.com/fullchain.pem
   key_file:
     file: /etc/letsencrypt/live/mail.phuongmphan.com/privkey.pem
+
+volumes:
+  postgresdata:
+    driver: local
