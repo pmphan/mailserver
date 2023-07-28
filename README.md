@@ -10,6 +10,7 @@ Mailserver running on Alpine Docker image. Because it's intended for personal us
 * OpenDKIM
 * Dovecot
 * PostfixAdmin
+* Roundcube (optional)
 
 ## Installation
 
@@ -72,10 +73,18 @@ docker-compose up -d
 ```
 4. Manage user and alias at `https://hostname`. Set up admin user at `https://hostname/setup.php`.
 
+5. Use a local instance of Roundcube to connect to the mailserver. Can be configured on the server itself but I'd rather have it installed locally:
+
+```
+docker-compose -f roundcube.compose.yml
+```
+
 ## Usage
 
 Pre-built images are at [pmphan/mailserver-postfix](https://hub.docker.com/r/pmphan/mailserver-postfix/) and [pmphan/mailserver-opendkim](https://hub.docker.com/r/pmphan/mailserver-postfix/).
 
-Mailserver is configured at: `mail.phuongmphan.com`
+Mailserver is configured at: `mail.phuongmphan.com`. Users are manage at `https://mail.phuongmphan.com`.
 
-Mailserver is configured to permit mail originating from local network and Docker's host machine. Relay service required as VPS providers/ISPs block outbound port 25 and I don't have a static IP.
+Mailserver is configured to permit mail originating from local network and Docker's host machine or authenticated users. Relay service required as VPS providers/ISPs block outbound port 25 and I don't have a static IP.
+
+A roundcube instance (or any other IMAP email client) can be used to connect to the mailserver.
