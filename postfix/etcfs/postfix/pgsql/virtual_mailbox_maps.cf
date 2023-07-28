@@ -1,0 +1,5 @@
+user = $dbuser
+password = $dbpassword
+hosts = postgres
+dbname = $dbname
+query = SELECT maildir FROM mailbox WHERE username='%s' AND active = true

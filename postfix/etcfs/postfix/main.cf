@@ -13,7 +13,8 @@ biff = no
 
 # Define my networks to let Postfix recognize Docker networks
 mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
-virtual_mailbox_domains = $mydomain
+
+mydestination = localhost.$myhostname, localhost
 
 # Prevent SMTP's greeting banner showing mailler as Postfix.
 smtpd_banner = $myhostname ESMTP
@@ -21,62 +22,90 @@ smtpd_banner = $myhostname ESMTP
 # Auto add missing headers (e.g. Message ID)
 always_add_missing_headers = yes
 
-# Sending email with TLS when possible
-smtp_tls_security_level = may
-smtp_tls_loglevel = 1
-smtp_tls_cert_file = /run/secrets/cert_file
-smtp_tls_key_file = /run/secrets/key_file
-
-# Receiving secure email when possible
-smtpd_tls_security_level = may
-smtpd_tls_loglevel = 1
-smtpd_tls_cert_file = /run/secrets/cert_file
-smtpd_tls_key_file = /run/secrets/key_file
-
-smtpd_sasl_path = smtpd
-smtp_sasl_auth_enable = yes
-
-# Defined for master.cf
-mua_sender_restrictions = reject_authenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
-
-# SMTPD rules
-smtpd_helo_required = yes
-smtpd_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, permit
-smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
-smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination, reject_unauth_pipelining
-smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
-smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated
-
-#virtual_transport = lmtp:dovecot:24
-# SASL via dovecot
-#smtpd_sasl_type = dovecot
-# SASL auth here
-#smtpd_sasl_path = inet:dovecot:10000
-#smtpd_sasl_security_options = noanonymous
-
-# Reduce CPU overhead
-tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
-
-# Defer some email harvesting
-disable_vrfy_command = yes
-
-# For use by DKIM Milter
-smtpd_milters = inet:opendkim:8891
-non_smtpd_milters = $smtpd_milters
-milter_default_action = accept
-
-# Alias database for system users
-alias_maps = lmdb:/etc/postfix/aliases
-alias_database = lmdb:/etc/postfix/aliases
-
-# For virtual users
-virtual_alias_maps = lmdb:/etc/postfix/virtual
-
 # Postfix email extensions.
 recipient_delimiter = +
 
 # No limit on user mailbox.
 mailbox_size_limit = 0
 
+# Defer some email harvesting
+disable_vrfy_command = yes
+
 # Output logs to stdout
 maillog_file = /dev/stdout
+
+# ############
+# # MAPPINGS #
+# ############
+# How to look up domain info
+virtual_mailbox_domains = pgsql:/etc/postfix/pgsql/virtual_mailbox_domains.cf
+# Lookup email address
+virtual_mailbox_maps = pgsql:/etc/postfix/pgsql/virtual_mailbox_maps.cf
+# Look up alias
+virtual_alias_maps = pgsql:/etc/postfix/pgsql/virtual_alias_maps.cf
+# Relay domain maps
+relay_domains = $mydestination, pgsql:/etc/postfix/pgsql/relay_domains.cf
+# Sender login info look up. Used for authen.
+smtpd_sender_login_maps = pgsql:/etc/postfix/pgsql/smtpd_sender_login_maps.cf
+# Alias database for system users
+alias_maps = lmdb:/etc/postfix/aliases
+alias_database = lmdb:/etc/postfix/aliases
+
+# Defined for master.cf
+mua_sender_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
+
+################
+# Restrictions #
+################
+# SMTPD rules
+smtpd_helo_required = yes
+smtpd_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, permit
+smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, defer_unauth_destination
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
+smtpd_client_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, reject_unauth_pipelining
+smtpd_sender_restrictions = $mua_sender_restrictions
+
+################
+# TLS Settings #
+################
+# Reduce CPU overhead
+tls_ssl_options = NO_COMPRESSION, NO_RENEGOTIATION
+tls_high_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+tls_preempt_cipherlist = yes
+
+# Sending email with TLS when possible
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+smtp_tls_cert_file = /run/secrets/cert_file
+smtp_tls_key_file = /run/secrets/key_file
+smtp_tls_protocols = !SSLv2,!SSLv3,!TLSv1,!TLSv1.1
+
+# Receiving secure email when possible
+smtpd_tls_security_level = may
+smtpd_tls_loglevel = 1
+smtpd_tls_cert_file = /run/secrets/cert_file
+smtpd_tls_key_file = /run/secrets/key_file
+smtpd_tls_protocols = !SSLv2,!SSLv3,!TLSv1,!TLSv1.1
+smtpd_tls_mandatory_ciphers = high
+smtpd_tls_mandatory_protocols = !SSLv2,!SSLv3,!TLSv1,!TLSv1.1
+smtpd_tls_exclude_ciphers = aNULL, SEED, CAMELLIA, RSA+AES, SHA1
+
+#################
+# SASL Settings #
+#################
+smtp_sasl_auth_enable = yes
+virtual_transport = lmtp:[dovecot]:24
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = inet:[dovecot]:9993
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $mydomain
+broken_sasl_auth_clients = yes
+
+#################
+# DKIM Settings #
+#################
+# For use by DKIM Milter
+smtpd_milters = inet:[opendkim]:8891
+non_smtpd_milters = $smtpd_milters
+milter_default_action = accept

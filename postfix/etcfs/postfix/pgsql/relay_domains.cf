@@ -1,0 +1,5 @@
+user = $dbuser
+password = $dbpassword
+hosts = postgres
+dbname = $dbname
+query = SELECT domain FROM domain WHERE domain='%s' and backupmx = true

@@ -20,10 +20,10 @@ _add_debug_peer_list() {
 _config_relay_host() {
   __expand_postconf_vars "relayhost" ${RELAY_HOST}
 
-  if [[ ( ! -z ${RELAY_HOST} ) && ( -z ${RELAY_USERNAME} || -z ${RELAY_PASSWORD} ) ]]
+  if [[ ( ! -z ${RELAY_HOST} ) && ( -z ${RELAY_USER} || -z ${RELAY_PASSWORD} ) ]]
   then
     _log "warn" "Relay host added but missing username or password."
   fi
-  postconf "$(postconf smtp_sasl_password_maps) static:${RELAY_USERNAME}:${RELAY_PASSWORD}"
+  postconf "$(postconf smtp_sasl_password_maps) static:${RELAY_USER}:${RELAY_PASSWORD}"
   _log "info" "Mapping added. Only static password map supported at the moment."
 }
