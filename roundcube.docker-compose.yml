@@ -10,3 +10,4 @@ services:
       ROUNDCUBEMAIL_DEFAULT_HOST: ssl://mail.phuongmphan.com
       ROUNDCUBEMAIL_DEFAULT_PORT: 993
       ROUNDCUBEMAIL_SMTP_SERVER: tls://mail.phuongmphan.com
+    restart: unless-stopped

@@ -25,6 +25,7 @@ services:
       POSTGRES_DB: postfix
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
 
   postfix:
     image: pmphan/mailserver-postfix:latest
