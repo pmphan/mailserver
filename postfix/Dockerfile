@@ -13,3 +13,5 @@ COPY scripts scripts
 COPY docker-entrypoint.sh .
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
+
+CMD ["/usr/sbin/postfix", "start-fg"]

@@ -43,5 +43,5 @@ function __add_system_user() {
     return 1
   fi
 
-  adduser ${1} --disabled-password ${@:2} && _log "info" "Added user '${1}'."
+  adduser ${1} --disabled-password -s /sbin/nologin ${@:2} && _log "info" "Added user '${1}'."
 }

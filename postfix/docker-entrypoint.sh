@@ -10,12 +10,11 @@
 
 _add_master_user
 _allow_docker
-_substitue_pgsql_creds
+_substitute_pgsql_creds
 _add_debug_peer_list
 _config_relay_host
 
 # Initialize aliases database.
 newaliases
 
-# Start Postfix in foreground.
-/usr/sbin/postfix start-fg
+exec "$@"

@@ -2,7 +2,7 @@
 #
 # Subsitute postgres config files with environment arguments.
 
-function _substitue_pgsql_creds() {
+function _substitute_pgsql_creds() {
   __replace "\$dbuser" ${POSTGRES_USER}
   __replace "\$dbpassword" ${POSTGRES_PASSWORD}
   __replace "\$dbname" ${POSTGRES_DB}
