@@ -32,6 +32,7 @@ services:
     hostname: ${HOSTNAME}
     ports:
       - "25:25"
+      - "587:587"
     secrets:
       - cert_file
       - key_file
