@@ -16,7 +16,6 @@ services:
     image: pmphan/mailserver-dovecot:latest
     container_name: dovecot
     ports:
-      - "143:143"
       - "993:993"
     secrets:
       - cert_file

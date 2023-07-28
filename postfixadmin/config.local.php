@@ -4,6 +4,11 @@ $CONF['configured'] = true;
 // correspond to dovecot maildir path /home/vmail/%d/%u 
 $CONF['domain_path'] = 'YES';
 $CONF['domain_in_mailbox'] = 'NO';
+$CONF['transport_options'] = array (
+    'virtual',  // for virtual accounts
+    'local',    // for system accounts
+    'relay'     // for backup mx
+);
 
 $CONF['database_type'] = 'pgsql';
 $CONF['database_host'] = 'postgres';

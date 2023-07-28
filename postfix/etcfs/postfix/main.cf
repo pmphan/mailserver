@@ -14,6 +14,8 @@ biff = no
 # Define my networks to let Postfix recognize Docker networks
 mynetworks = 127.0.0.0/8 [::1]/128 [fe80::]/64
 
+mydestination = localhost.$myhostname, localhost
+
 # Prevent SMTP's greeting banner showing mailler as Postfix.
 smtpd_banner = $myhostname ESMTP
 
@@ -50,7 +52,7 @@ alias_maps = lmdb:/etc/postfix/aliases
 alias_database = lmdb:/etc/postfix/aliases
 
 # Defined for master.cf
-mua_sender_restrictions = reject_authenticated_sender_login_mismatch, permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
+mua_sender_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unknown_sender_domain
 
 ################
 # Restrictions #
@@ -91,10 +93,11 @@ smtpd_tls_exclude_ciphers = aNULL, SEED, CAMELLIA, RSA+AES, SHA1
 #################
 # SASL Settings #
 #################
+smtp_sasl_auth_enable = yes
 virtual_transport = lmtp:[dovecot]:24
-smtp_sasl_auth_enable = no
+smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = dovecot
-smtpd_sasl_path = inet:dovecot:9993
+smtpd_sasl_path = inet:[dovecot]:9993
 smtpd_sasl_security_options = noanonymous
 smtpd_sasl_local_domain = $mydomain
 broken_sasl_auth_clients = yes
@@ -103,6 +106,6 @@ broken_sasl_auth_clients = yes
 # DKIM Settings #
 #################
 # For use by DKIM Milter
-smtpd_milters = inet:opendkim:8891
+smtpd_milters = inet:[opendkim]:8891
 non_smtpd_milters = $smtpd_milters
 milter_default_action = accept

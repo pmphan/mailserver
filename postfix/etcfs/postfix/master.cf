@@ -15,22 +15,12 @@ submission     inet  n       -       n       -       -       smtpd
   -o smtpd_tls_security_level=encrypt
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_sasl_type=dovecot
+  -o smtpd_sasl_path=inet:dovecot:9993
+  -o smtpd_sasl_security_options=noanonymous
   -o smtpd_sasl_authenticated_header=yes
   -o smtpd_reject_unlisted_recipient=no
   -o smtpd_client_restrictions=permit_sasl_authenticated,permit_mynetworks,reject
   -o smtpd_relay_restrictions=permit_sasl_authenticated,permit_mynetworks,reject
-  -o smtpd_sender_restrictions=$mua_sender_restrictions
-  -o milter_macro_daemon_name=ORIGINATING
-
-submissions    inet  n       -       n       -       -       smtpd
-  -o syslog_name=postfix/submissions
-  -o smtpd_tls_wrappermode=yes
-  -o smtpd_sasl_auth_enable=yes
-  -o smtpd_sasl_type=dovecot
-  -o smtpd_reject_unlisted_recipient=no
-  -o smtpd_sasl_authenticated_header=yes
-  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
   -o smtpd_sender_restrictions=$mua_sender_restrictions
   -o milter_macro_daemon_name=ORIGINATING
 
