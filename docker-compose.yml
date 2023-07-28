@@ -22,7 +22,7 @@ services:
       - key_file
       - dh_file
     environment:
-      POSTGRES_DB: ${DB_USER}
+      POSTGRES_DB: postfix
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 

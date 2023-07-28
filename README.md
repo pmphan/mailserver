@@ -70,6 +70,7 @@ Further config can be changed by modifying the compose file.
 ```bash
 docker-compose up -d
 ```
+4. Manage user and alias at `https://hostname`. Set up admin user at `https://hostname/setup.php`.
 
 ## Usage
 
